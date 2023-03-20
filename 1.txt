@@ -1,0 +1,213 @@
+<!-- <template>
+     <div v-if="a == 'A'">
+    A
+    </div>
+<div v-else-if="a == 'B'">
+    B
+</div>
+<div v-else>
+    C
+</div> -->
+    <!-- v-on 可以被@代替，效果一样-->
+    <!-- <div @click="parent">
+    <button @[event].stop="xxx">点击</button>
+  </div> -->
+
+    <!-- <div class="c" :class="[Cls ? 'a' : 'b']">  v-bind 一般会简写为 :  支持动态也支持静态 -->
+    <!-- 演示v-bind -->
+    <!-- </div> -->
+    <!-- <div>
+        <input v-model="a" type="text">
+        <div>{{ a }}</div>
+    </div> -->
+    <div>
+        <div v-for="(item,index) in arr"> <!-- item 就是数组中的每一项,index就是索引-->
+            <!-- 
+                v-once 性能优化只渲染一次
+                v-memo 性能优化会有缓存
+            -->>
+           {{ index }} - {{ item }}
+        </div>
+    </div>
+</template> -->
+<!-- 
+<script setup lang="ts">
+const arr:string[] =['a','x','q']
+// import { ref } from 'vue'  //把一个值变成响应式
+// const a = ref('a')
+
+// const a:string = 'D'
+// const event = 'click'
+// const parent = ()=>{
+//     console.log('父级');
+// }
+// const xxx =() =>{
+//     console.log('abc');
+// }
+// const id:string = '123'
+// const Cls:boolean = false
+// const style = {
+//     color:'red',
+//     border:'1px soild #ccc'
+// }
+
+
+
+</script> -->
+
+
+
+<!-- <style>
+.a {
+    color: red;
+}
+
+.b {
+    border: 1px solid #ccc;
+}
+
+.c {
+    background-color: aqua;
+}
+</style> -->
+
+
+
+
+
+
+
+
+
+
+<template>
+    <div>
+        {{ Man }}
+    </div>
+    <hr>
+    <div>
+        customRef:{{ obj }}
+    </div>
+    <hr>
+
+
+    <div ref="dom">我是dom</div>
+
+
+    <button @click="change">修改</button>
+</template>
+<script setup lang = "ts">
+import { ref, isRef, shallowRef, triggerRef, customRef } from 'vue'
+
+
+
+const dom = ref<HTMLDivElement>()
+
+
+
+const Man = ref({ name: "man" })
+const change = () => {
+    // console.log(isRef(Man));
+    obj.value = 'customRef 修改了'
+    console.log(dom.value?.innerText);
+}
+
+function MyRef<T>(value: T) {
+    let timer: any
+    return customRef((track, trigger) => {
+        return {
+            get() {
+                track()
+                return value
+            },
+            set(newVal) {
+                clearTimeout(timer)
+                timer = setTimeout(() => {
+                    console.log('chufale');
+                    value = newVal
+                    timer = null;
+                    trigger()
+
+                },500)
+
+            }
+        }
+    }
+
+    )
+}
+const obj = MyRef<string>('customRef-abc')
+</script>
+
+
+<style scoped></style>
+
+
+
+
+<template>
+    <div>
+        <!-- <ul>
+            <li v-for="item in list.arr">{{ item }}</li>
+        </ul>
+        <button @click="add">添加</button> -->
+        <div>
+            {{ obj }}
+        </div>
+        <div>
+            {{ obj2 }}
+        </div>
+        <button @click="edit">修改</button>
+    </div>
+</template>
+
+<script setup lang="ts">
+import { ref, reactive, readonly, shallowReactive } from "vue";
+// readonly只能读取不能改变值，但是可以在外部直接改变obj的值
+// shallowReactive只能浅层影响，不能修改页面上的值
+// shallowReactive也会被reactive影响
+let obj = reactive({ name: 'abc' })
+
+const obj2: any = shallowReactive({
+    foo: {
+        bar: {
+            num: 1
+        }
+    }
+})
+
+const edit = () => {
+    obj.name = 'asd'
+    obj2.foo.bar.num = 456
+    console.log(obj2);
+
+
+}
+
+// ref reactive
+// ref支持所有的类型 reactive 只支持引用类型 OBJ Array map set
+// ref 取值和赋值都需要。value  reactive是不需要.value的
+// reactive是proxy代理的 不能直接复制，否则会破坏响应式对象
+// 解决方法 1.数组可以使用push加解构 2.添加一个对象把数组作为一个属性取解决
+/*
+    let list = reactive<{
+    arr:string[]
+}>({
+    arr:[]
+})
+
+const add = () => {
+    setTimeout(()=>{
+        let res = ['EDG','RNG','JDG']
+        list.arr = res;
+        console.log(list);
+        
+    },2000)
+}
+*/
+
+
+
+</script>
+
+<style scoped ></style>
