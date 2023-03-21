@@ -211,3 +211,208 @@ const add = () => {
 </script>
 
 <style scoped ></style>
+
+
+
+<template>
+  <div >
+    {{ man }}
+  </div>
+  <hr>
+  <!-- <div>
+    toRef:{{ like }}
+  </div> -->
+  <!-- {{ name }}--{{ age }}--{{ like }} -->
+  <div>
+    <button @click="change">修改</button>
+  </div>
+</template>
+
+
+<script setup lang="ts">
+import { toRef,reactive,toRefs,toRaw } from 'vue'
+// toref 只能修改响应式对象的值，非响应式对象视图毫无变化
+const man = reactive({name:"abc",age:15.5,like:'jk'})
+// const like = toRef(man,'like')
+// let {name,age,like} = toRefs(man)
+const change = ()=>{
+    // // man.like = 'luoli'
+    // like.value = '洛丽塔'
+    // console.log(like);
+
+    // name.value = 'abcd'
+    // age.value = 18
+    // console.log(name,age,like);
+    
+    console.log(man,toRaw(man));
+    
+}
+
+</script>
+
+
+<style scoped> 
+* {
+    padding: 0;
+    margin: 0;
+}
+</style>
+
+
+
+
+
+
+
+
+
+<template>
+  <div >
+    <input v-model="fistName" type="text">
+    <input v-model="lastName" type="text">
+  </div>
+  <div>
+    {{ name }}
+  </div>
+</template>
+
+<script setup lang="ts">
+import {computed,ref} from 'vue'
+let fistName = ref('')
+let lastName = ref('')
+// const name = computed(()=>{
+//   return fistName.value + '----' + lastName.value
+// })
+// const name = computed({
+//   get(){
+//     return fistName.value + lastName.value
+//   },
+  
+//   set(){
+//     fistName.value + lastName.value
+//   }
+  
+// })
+</script>
+<style scoped>
+</style>
+
+
+
+
+
+<template>
+  <div>
+    <table border style="width:800px">
+      <thead>
+        <tr>
+          <th>名称</th>
+          <th>数量</th>
+          <th>价格</th>
+          <th>操作</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr :key="index" v-for="(item, index) in data">
+          <td align="center">{{ item.name }}</td>
+          <td align="center">
+            <button @click="AddAndSub(item, false)">-</button>
+            {{ item.num }}
+            <button @click="AddAndSub(item, true)">+</button>
+          </td>
+          <td align="center">{{ item.num * item.price }}</td>
+          <td align="center">
+            <button @click="del(index)">删除</button>
+          </td>
+        </tr>
+      </tbody>
+
+      <tfoot>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td align="center">总价:{{ $total }}</td>
+      </tfoot>
+    </table>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { reactive, ref, computed } from 'vue';
+type Shop = {
+  name: string,
+  num: number,
+  price: number
+}
+let $total = ref(0)
+const data = reactive([
+  {
+    name: 'asd',
+    num: 1,
+    price: 100
+  },
+  {
+    name: 'abc',
+    num: 1,
+    price: 200
+  },
+  {
+    name: 'asdf',
+    num: 1,
+    price: 300
+  },
+])
+const AddAndSub = (item: Shop, type: boolean): void => {
+  if (item.num > 1 && !type) {
+    item.num--
+  }
+  if (item.num < 99 && type) {
+    item.num++
+  }
+}
+const del = (index: number) => {
+  data.splice(index, 1)
+}
+
+$total = computed<number>(() => {
+  return data.reduce((prev, next) => {
+    return prev + (next.num * next.price)
+  }, 0)
+})
+</script>
+
+<style scoped></style>
+
+
+<template>
+  <div>
+    case1:<input v-model="message.foo.bar.name" type="text">
+    <hr>
+    case1:<input v-model="message.foo.bar.age" type="text">
+  </div>
+</template>
+
+<script setup lang="ts">
+import { ref, reactive, watch } from 'vue'
+
+let message = reactive({
+  foo:{
+    bar:{
+      name:"abcdefg",
+      age:'123'
+    }
+  }
+})
+
+  watch(()=>message.foo.bar.name,(newVal,oldVal)=>{
+    console.log(newVal,oldVal);
+  },
+  
+  {
+    // deep:true  //深度监听
+    immediate:true, //立即执行一次
+    flush:"pre" //flush 控制watch执行的一个顺序，有三个值 pre 组件更新之前调用，sync同步执行 post组件更新之后执行
+  })
+
+</script>
+<style scoped lang='less'></style>
