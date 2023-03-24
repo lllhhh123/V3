@@ -1,0 +1,18 @@
+<template>
+  <div>
+    <h3>组件</h3>
+    <div ref="div">{{ str }}</div>
+    <button @click="change">修改str</button>
+    <hr>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { ref,onBeforeMount,onMounted,onBeforeUpdate,onUpdated,onBeforeUnmount,onUnmounted,onRenderTracked,onRenderTriggered } from "vue";
+const str = ref<string>('abc')
+const div = ref<HTMLDivElement>()
+const change = ()=>{
+    str.value = 'asdf'
+}
+</script>
+<style scoped lang='less'></style>

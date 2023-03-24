@@ -416,3 +416,60 @@ let message = reactive({
 
 </script>
 <style scoped lang='less'></style>
+
+
+
+
+
+
+
+
+
+
+<template>
+  <div>
+    <input id = "ipt" v-model="message" type="text" />
+
+    <input v-model="message2" type="text" />
+    <button @click="stopWatch">停止监听</button>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { ref, watchEffect } from 'vue';
+
+let message = ref<string>('飞机')
+let message2 = ref<string>('飞机杯')
+const stop = watchEffect((oninvalidate)=>{
+  let ipt:HTMLInputElement = document.querySelector('#ipt') as HTMLInputElement
+  // console.log('message====>',message.value);
+  // console.log('message2====>',message2.value);
+  console.log(ipt,'ellllll');
+  
+  oninvalidate(()=>{
+    console.log('before');
+  })
+},{
+  flush:"post",
+  onTrigger(){
+    
+  }
+})
+const stopWatch = ()=>stop()
+</script>
+
+<style scoped lang='less'></style>
+
+
+<template>
+  <div></div>
+  <HelloWorld> </HelloWorld>
+</template>
+
+<script setup>
+import { ref, reactive } from 'vue'
+import HelloWorld from "./components/HelloWorld.vue";
+
+</script>
+
+<style scoped lang='less'></style>
