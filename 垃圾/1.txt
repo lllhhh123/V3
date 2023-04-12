@@ -520,3 +520,155 @@ import BVue from './components/expame/B.vue'
     cursor:pointer;
   }
 </style>
+
+
+<template>
+  <div>
+    <Dialog>
+      <template #header> <!-- v-slot:  可以被简写为#-->
+          <div>
+              asd
+          </div>
+      </template>
+      <template #default="{data,index}">   <!-- 在template中v-slot 可以被简写为#default-->
+          <div>
+              {{data.name}} --{{ data.age }} --{{ index }}
+          </div>
+      </template>
+      <template v-slot:footer>
+          <div>
+              asdfghjkl
+          </div>
+      </template>
+    </Dialog>
+  </div>
+</template>
+<script setup lang="ts">
+
+import { reactive } from 'vue';
+import Dialog from '../src/layout/index.vue'
+</script>
+
+
+<template>
+    <div>
+        <header class="header">
+            <slot name="header"></slot>
+        </header>
+        <main class="main">
+            <div v-for="(item,index) in data">
+                <slot :index="index" :data="item"></slot>
+            </div>
+            
+        </main>
+        <footer class="footer">
+            <slot name="footer"></slot>
+        </footer>
+
+    </div>
+</template>
+
+<script setup lang="ts">
+import { reactive } from "vue";
+type names = {
+    name: string,
+    age: number
+}
+const data = reactive<names[]>([{
+    name: 'asd',
+    age: 20
+},
+{
+    name: 'asdf',
+    age: 202
+},
+{
+    name: 'asdfg',
+    age: 2020
+}, {
+    name: 'asdfgh',
+    age: 20202
+},
+])
+</script>
+<style scoped lang='less'>
+.header {
+    height: 200px;
+    background-color: red;
+    color: #fff;
+}
+
+.main {
+    height: 200px;
+    background-color: blue;
+    color: #fff;
+}
+
+.footer {
+    height: 200px;
+    background-color: greenyellow;
+    color: #fff;
+}
+</style>
+
+
+<template>
+  <div class="content">
+    <button @click="flag = !flag">switch</button>
+    <transition leave-active-class="animate__animated animate__bounceInLeft"
+            enter-active-class="animate__animated animate__bounceInRight"
+>
+      <div v-if="flag" class="box"></div>
+    </transition>
+    
+  </div>
+</template>
+
+<script setup lang="ts">
+  import { ref,reactive } from "vue";
+  import 'animate.css'
+  const flag = ref<boolean>(true)
+</script>
+
+
+
+<style lang="less" scoped>
+.box{
+  width: 200px;
+  height: 200px;
+  background-color: red;
+}
+.fade-enter-from{
+  width: 0;
+  height: 0;
+  transform: rotate(360deg);
+}
+.fade-enter-active{
+  transition: all 1.5s ease;
+}
+.fade-enter-to{
+  width: 200px;
+  height: 200px;
+
+  background-color: black;
+}
+.fade-leave-from{
+  width: 200px;
+  height: 200px;
+  transform: rotate(360deg);
+}
+.fade-leave-active{
+  transition: all 1.5s ease;
+}
+.fade-leave-to{
+  width: 0;
+  height: 0;
+}
+
+.loading{
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    background:blue;
+  }
+</style>
