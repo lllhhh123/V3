@@ -772,3 +772,23 @@ const vMove:Directive<any,void> = (el:HTMLElement,bingding:DirectiveBinding)=>{
   }
 }
 </style>
+
+
+<template>
+  <div>{{ $env }}</div>
+  <div>{{ $filters.format('fg') }}</div>
+</template>
+  
+<script setup lang='ts'>
+
+import {ref,reactive,getCurrentInstance} from 'vue'
+
+const app = getCurrentInstance()
+console.log(app?.proxy?.$env);
+
+
+</script>
+  
+<style lang="less">
+
+</style>

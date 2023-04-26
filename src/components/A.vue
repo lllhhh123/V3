@@ -5,7 +5,10 @@
 </template>
   
 <script setup lang="ts">
-
+import { useAttrs } from 'vue';
+  let attr = useAttrs()
+  console.log(attr);
+  
 </script>
   
 <style scoped>
