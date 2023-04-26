@@ -672,3 +672,103 @@ const data = reactive<names[]>([{
     background:blue;
   }
 </style>
+
+
+<template>
+  <div>
+      <button @click="shuffle">Shuffle</button>
+      <transition-group class="wraps" name="mmm" tag="ul">
+          <li class="cell" v-for="item in items" :key="item.id">{{ item.number }}</li>
+      </transition-group>
+  </div>
+</template>
+
+<script setup  lang='ts'>
+import _ from 'lodash'
+import { ref } from 'vue'
+let items = ref(Array.apply(null, { length: 81 } as number[]).map((_, index) => {
+  return {
+      id: index,
+      number: (index % 9) + 1
+  }
+}))
+const shuffle = () => {
+  items.value = _.shuffle(items.value)
+}
+</script>
+
+<style scoped lang="less">
+.wraps {
+  display: flex;
+  flex-wrap: wrap;
+  width: calc(25px * 10 + 9px);
+  .cell {
+      width: 25px;
+      height: 25px;
+      border: 1px solid #ccc;
+      list-style-type: none;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+  }
+}
+
+.mmm-move {
+  transition: transform 0.8s ease;
+}
+</style>
+
+
+<template>
+  <div v-move class ="box">
+    <div class="header"></div>
+    <div>
+      内容
+    </div>
+  </div>
+</template>
+  
+<script setup lang='ts'>
+
+import { ref, Directive,DirectiveBinding} from 'vue'
+const vMove:Directive<any,void> = (el:HTMLElement,bingding:DirectiveBinding)=>{
+    let moveElement:HTMLDivElement = el.firstElementChild as HTMLDivElement
+    console.log(moveElement);
+    const mouseDown = (e:MouseEvent)=>{
+      let X = e.clientX - el.offsetLeft
+      let Y = e.clientY - el.offsetTop
+      const move = (e:MouseEvent)=>{
+        console.log(e);
+        el.style.left = e.clientX -X + 'px'
+        el.style.top = e.clientY -Y + 'px'
+      }
+      document.addEventListener('mousemove',move)
+      document.addEventListener('mouseup',()=>{
+        document.removeEventListener('mousemove',move)
+      })
+    }
+    moveElement.addEventListener('mousedown',mouseDown)
+    
+}
+
+
+
+
+</script>
+  
+<style lang="less">
+.box{
+  position:fixed;
+  left:50%;
+  top:50%;
+  transform: translate(-50%,-50%);
+  width: 200px;
+  height: 200px;
+  border: 1px solid #ccc;
+  .header{
+    height: 20px;
+    background-color: black;
+    cursor:move;
+  }
+}
+</style>
